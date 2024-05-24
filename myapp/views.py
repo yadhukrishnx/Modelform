@@ -28,17 +28,14 @@ def updatebook(request,book_id):
     book=Book.objects.get(id=book_id)
     
     if request.method=='POST':
-        title=request.POST.get('title')
-        price=request.POST.get('price')
-        
-        book.title=title
-        book.price=price
-        
-        book.save()
-        
-        return redirect('/')
-    
-    return render(request,'updatebook.html',{'book':book})
+        form = BookForm(request.POST,instance=book)
+        if form.is_valid():
+            book.save()
+
+            return redirect('/')
+    else:
+        form=BookForm(instance=book)
+    return render(request,'updatebook.html',{'form':form})
 
 
 def deletebook(request,book_id):
